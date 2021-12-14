@@ -36,7 +36,7 @@ def init(horizon_color: list = [0.05, 0.05, 0.05], compute_device: str = "GPU", 
     # Use cycles
     bpy.context.scene.render.engine = 'CYCLES'
 
-    if platform == "darwin" or compute_device == "CPU":
+    if compute_device == "CPU":
         # if there is no gpu support (mac os) or if cpu is specified as compute device, then use the cpu with maximum power
         bpy.context.scene.cycles.device = "CPU"
         bpy.context.scene.render.threads = multiprocessing.cpu_count()
@@ -45,7 +45,7 @@ def init(horizon_color: list = [0.05, 0.05, 0.05], compute_device: str = "GPU", 
         preferences = bpy.context.preferences.addons['cycles'].preferences
         for device_type in preferences.get_device_types(bpy.context):
             preferences.get_devices_for_type(device_type[0])
-        for gpu_type in ["OPTIX", "CUDA"]:
+        for gpu_type in ["OPTIX", "CUDA", "METAL"]:
             found = False
             for device in preferences.devices:
                 if device.type == gpu_type and (compute_device_type is None or compute_device_type == gpu_type):
@@ -56,9 +56,9 @@ def init(horizon_color: list = [0.05, 0.05, 0.05], compute_device: str = "GPU", 
             if found:
                 break
         # make sure that all visible GPUs are used
-        for group in prefs.get_devices():
-            for d in group:
-                d.use = True
+        # for group in prefs.get_devices():
+        #     for d in group:
+        #         d.use = True
 
     # Set the Experimental features on/off
     if use_experimental_features:

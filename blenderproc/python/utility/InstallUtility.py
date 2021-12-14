@@ -189,6 +189,7 @@ class InstallUtility:
                     major_version = sub_dir
                     break
 
+            major_version = "2.93"
             if major_version is None:
                 raise Exception("Could not determine major blender version")
 
